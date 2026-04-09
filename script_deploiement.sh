@@ -5,13 +5,13 @@ apt install curl apache2 php php-mysql mariadb-server -y
 
 conf_apache2() {
 	cd /etc/apache2/sites-available
-	cat << EOF >
+	cat << "EOF" > wordpress.conf
 <VirtualHost *:80>
 	ServerName wordpress.p50x.lan
 	DocumentRoot /var/www/wordpress
 </VirtualHost>
 EOF
-	e2ensite wordpress
+	a2ensite wordpress
 	systemctl restart apache2
 }
 
@@ -30,7 +30,7 @@ install_wordpress() {
 
 config_database() {
 
-        mysql -u root << "EOL"
+        mysql -u root << EOL
 create database if not exists $database;
 create user if not exists $user@localhost identified by "$password";
 grant all privileges on $database.* to $user@localhost;
@@ -51,6 +51,7 @@ while getopts "d:v:u:p:" option; do
   esac
 done
 
+conf_apache2
 config_database
 install_wordpress
 
