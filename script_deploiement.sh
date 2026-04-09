@@ -3,6 +3,18 @@
 apt update && apt upgrade -y
 apt install curl apache2 php php-mysql mariadb-server -y
 
+conf_apache2() {
+	cd /etc/apache2/sites-available
+	cat << EOF >
+<VirtualHost *:80>
+	ServerName wordpress.p50x.lan
+	DocumentRoot /var/www/wordpress
+</VirtualHost>
+EOF
+	e2ensite wordpress
+	systemctl restart apache2
+}
+
 install_wordpress() {
         cd /var/www/
         echo "Install wordpress v$version"
@@ -13,8 +25,7 @@ install_wordpress() {
         sed -i "s/password_here/$password/" wp-config-sample.php
         sed -i "s/database_name_here/$database/" wp-config-sample.php
         cp wp-config-sample.php wp-config.php
-        #a2ensite wordpress
-        systemctl restart apache2
+	systemctl restart apache2
 }
 
 config_database() {
