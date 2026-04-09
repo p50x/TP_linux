@@ -5,18 +5,19 @@ apt install curl apache2 php php-mysql mariadb-server -y
 
 conf_apache2() {
 	cd /etc/apache2/sites-available
-	cat << "EOF" > wordpress.conf
+	cat << "EOF" > $site-wordpress.conf
 <VirtualHost *:80>
-	ServerName wordpress.p50x.lan
-	DocumentRoot /var/www/wordpress
+	ServerName wordpress.$site.lan
+	DocumentRoot /var/www/$site/wordpress
 </VirtualHost>
 EOF
-	a2ensite wordpress
+	a2ensite $site-wordpress
 	systemctl restart apache2
 }
 
 install_wordpress() {
-        cd /var/www/
+	mkdir -p /var/www/$site
+	cd /var/www/$site
         echo "Install wordpress v$version"
         wget https://wordpress.org/wordpress-"$version".tar.gz -O ./wordpress.tar.gz
         tar xvf wordpress.tar.gz
@@ -31,9 +32,9 @@ install_wordpress() {
 config_database() {
 
         mysql -u root << EOL
-create database if not exists $database;
+create database if not exists $site-$database;
 create user if not exists $user@localhost identified by "$password";
-grant all privileges on $database.* to $user@localhost;
+grant all privileges on $site-$database.* to $user@localhost;
 flush privileges;
 EOL
 
@@ -45,6 +46,7 @@ while getopts "d:v:u:p:" option; do
     v) version=$OPTARG ;;       # set wordpress version
     u) user=$OPTARG ;;          # set user name
     p) password=$OPTARG ;;      # set password
+    s) site=$OPTARG ;;		# set site name
     *) echo
        echo "Invalid $OPTARG option"
        exit 1 ;;
