@@ -40,7 +40,7 @@ EOL
 
 }
 
-while getopts "d:v:u:p:" option; do
+while getopts "d:v:u:p:s:" option; do
   case $option in
     d) database=$OPTARG ;;      # set database name
     v) version=$OPTARG ;;       # set wordpress version
