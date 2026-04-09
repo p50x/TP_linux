@@ -1,0 +1,4 @@
+User: wordpress
+Pass: monpass
+
+sed -i 's/Monuser/wordpress/' hello
