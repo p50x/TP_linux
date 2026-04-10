@@ -35,3 +35,8 @@
     owner: '{{ apache.user }}'
     group: '{{ apache.group }}'
     mode: 0644
+
+- name: creation utilisateur mariadb
+  import_tasks: mariadb.yml
+  tags:
+    - mariadb
