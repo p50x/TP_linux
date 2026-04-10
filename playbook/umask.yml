@@ -1,0 +1,9 @@
+---
+- hosts: all
+  tasks:
+    - name: umask
+      replace:
+      when: ansible_os_family == 'Debian'
+        path: /etc/skel/.profile
+        regexp: '^#*umask [0-9]*'
+        replace: 'umask 002'

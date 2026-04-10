@@ -1,0 +1,10 @@
+lamp_packages:
+  - httpd
+  - mariadb-server
+  - php
+  - php-mysqlnd
+
+apache:
+  service: httpd
+  user: apache
+  group: apache
